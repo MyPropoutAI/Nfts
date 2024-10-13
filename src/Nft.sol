@@ -16,4 +16,14 @@ contract MyNFT is ERC721URIStorage, Ownable {
         _mint(to, tokenId);
         _setTokenURI(tokenId, tokenURI);
     }
+
+    function mintBatchNFT(address[] memory to, string[] memory tokenURIs) public onlyOwner {
+        require(to.length == tokenURIs.length, "Addresses and tokenURIs length mismatch");
+        for (uint256 i = 0; i < to.length; i++) {
+            uint256 tokenId = _tokenIdCounter;
+            _tokenIdCounter++;
+            _mint(to[i], tokenId);
+            _setTokenURI(tokenId, tokenURIs[i]);
+        }
+    }
 }

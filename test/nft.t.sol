@@ -51,6 +51,48 @@ contract MyNFTTest is Test {
         vm.stopPrank();
     }
 
+    function testBatchMintNFT() public {
+        address[] memory recipients = new address[](2);
+        recipients[0] = user1;
+        recipients[1] = user2;
+
+        string[] memory tokenURIs = new string[](2);
+        tokenURIs[0] = "https://token-uri.com/1";
+        tokenURIs[1] = "https://token-uri.com/2";
+
+        vm.startPrank(owner);
+        myNFT.mintBatchNFT(recipients, tokenURIs);
+        vm.stopPrank();
+
+        assertEq(myNFT.ownerOf(0), user1);
+        assertEq(myNFT.ownerOf(1), user2);
+    }
+
+    function testBatchMintNFTMismatchedArrays() public {
+        address[] memory recipients = new address[](2);
+        recipients[0] = user1;
+        recipients[1] = user2;
+
+        string[] memory tokenURIs = new string[](1);
+        tokenURIs[0] = "https://token-uri.com/1";
+
+        vm.startPrank(owner);
+        vm.expectRevert("Addresses and tokenURIs length mismatch");
+        myNFT.mintBatchNFT(recipients, tokenURIs);
+        vm.stopPrank();
+    }
+
+    function testBatchMintNFTNoAddresses() public {
+        address[] memory recipients = new address[](0);
+        string[] memory tokenURIs = new string[](0);
+
+        vm.startPrank(owner);
+        myNFT.mintBatchNFT(recipients, tokenURIs);
+        vm.stopPrank();
+
+        // No tokens should be minted, so no assertions needed
+    }
+
     function mkaddr(string memory name) public returns (address) {
         address addr = address(
             uint160(uint256(keccak256(abi.encodePacked(name))))
