@@ -81,10 +81,17 @@ contract PropNFT is ERC721URIStorage, Ownable {
 
     // Function to mint NFT for whitelisted addresses
     function mintNFT(address to) public {
-        require(_whitelistedAddresses[msg.sender].isWhitelisted, "You are not whitelisted to mint");
         
-        MembershipType membershipType = _whitelistedAddresses[msg.sender].membershipType;
+        MembershipType membershipType;
         uint256 royaltyPercentage;
+
+        
+
+        if (_whitelistedAddresses[msg.sender].isWhitelisted) {
+            membershipType = _whitelistedAddresses[msg.sender].membershipType;
+        } else {
+            membershipType = MembershipType.Common; 
+        }
 
         // Set royalty percentage based on membership type
         if (membershipType == MembershipType.Common) {
@@ -93,7 +100,6 @@ contract PropNFT is ERC721URIStorage, Ownable {
             royaltyPercentage = ROYALTY_PREMIUM;
         } else if (membershipType == MembershipType.Uncommon) {
             royaltyPercentage = ROYALTY_PLATINUM;
-        
         } else if (membershipType == MembershipType.Native) {
             royaltyPercentage = ROYALTY_GOLD;
         }
@@ -102,12 +108,13 @@ contract PropNFT is ERC721URIStorage, Ownable {
         _tokenIdCounter++;
         _mint(to, tokenId);
         
-        
         // Set NFT details
         _nftDetails[tokenId] = NFTDetails(membershipType, royaltyPercentage);
         
         // Remove address from whitelist after minting
-        _whitelistedAddresses[msg.sender].isWhitelisted = false;
+        if (_whitelistedAddresses[msg.sender].isWhitelisted) {
+            _whitelistedAddresses[msg.sender].isWhitelisted = false;
+        }
     }
 
     // Function to mint NFT with specified membership type
