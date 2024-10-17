@@ -2,11 +2,11 @@
 
 ### Contract Address
 
-- **Address:** [0xf4a02703f125EDC2bf1518c4398B8766ec3212Ba](https://sepolia-blockscout.lisk.com/address/0xf4a02703f125EDC2bf1518c4398B8766ec3212Ba)
+- **Address:** [0x699630d9cA385f7481192d6d4B88E1380d89E80e](https://sepolia-blockscout.lisk.com/address/0x699630d9cA385f7481192d6d4B88E1380d89E80e)
 
 ### Explorer URL
 
-- **Blockscout Explorer:** [View Contract on Sepolia Blockscout](https://sepolia-blockscout.lisk.com/address/0xf4a02703f125EDC2bf1518c4398B8766ec3212Ba)
+- **Blockscout Explorer:** [View Contract on Sepolia Blockscout](https://sepolia-blockscout.lisk.com/address/0x699630d9cA385f7481192d6d4B88E1380d89E80e)
 
 
 # PropNFT Contract Documentation

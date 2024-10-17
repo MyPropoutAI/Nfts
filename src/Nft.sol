@@ -41,7 +41,7 @@ contract PropNFT is ERC721URIStorage, Ownable {
     // Mapping to track whitelisted addresses and their membership types
     mapping(address => WhitelistedAddress) private _whitelistedAddresses;
 
-    constructor() ERC721("PropNFT", "PNFT") Ownable(msg.sender) {}
+    constructor() ERC721("PropNFT", "PNFT") Ownable(0xE6e2595f5f910c8A6c4cf42267Ca350c6BA8c054) {}
 
     function mintNFT(address to, MembershipType membershipType, uint256 royaltyPercentage) public onlyOwner {
         uint256 tokenId = _tokenIdCounter;
@@ -81,19 +81,19 @@ contract PropNFT is ERC721URIStorage, Ownable {
 
     // Function to mint NFT for whitelisted addresses
     function mintNFT(address to) public {
+       
         
         MembershipType membershipType;
         uint256 royaltyPercentage;
 
-        
-
+        // Check if the address is whitelisted, otherwise set default membership type to Common
         if (_whitelistedAddresses[msg.sender].isWhitelisted) {
             membershipType = _whitelistedAddresses[msg.sender].membershipType;
         } else {
-            membershipType = MembershipType.Common; 
+            membershipType = MembershipType.Common;
         }
 
-        // Set royalty percentage based on membership type
+       
         if (membershipType == MembershipType.Common) {
             royaltyPercentage = ROYALTY_NORMAL;
         } else if (membershipType == MembershipType.Rare) {
@@ -108,10 +108,13 @@ contract PropNFT is ERC721URIStorage, Ownable {
         _tokenIdCounter++;
         _mint(to, tokenId);
         
+       
+        setTokenURIForMembership(tokenId, membershipType);
+        
         // Set NFT details
         _nftDetails[tokenId] = NFTDetails(membershipType, royaltyPercentage);
         
-        // Remove address from whitelist after minting
+        
         if (_whitelistedAddresses[msg.sender].isWhitelisted) {
             _whitelistedAddresses[msg.sender].isWhitelisted = false;
         }
@@ -163,24 +166,41 @@ contract PropNFT is ERC721URIStorage, Ownable {
     // Function to calculate minting fee based on membership type
     function calculateMintingFee(MembershipType membershipType) private pure returns (uint256) {
         if (membershipType == MembershipType.Common) {
-            return 0.01 ether; // Example fee for Common
+            return 0.01 ether; 
         } else if (membershipType == MembershipType.Rare) {
-            return 0.02 ether; // Example fee for Rare
+            return 0.02 ether; 
         } else if (membershipType == MembershipType.Uncommon) {
-            return 0.03 ether; // Example fee for Uncommon
+            return 0.03 ether; 
         }
-        return 0; // Default case
+        return 0; 
     }
 
-    // Function to get token URI based on membership type
+    
     function getTokenURI(MembershipType membershipType) private pure returns (string memory) {
         if (membershipType == MembershipType.Common) {
-            return "ipfs://common-token-uri"; // Replace with actual URI
+            return "QmXnxwJT4rwP4f9ubKjLwx6Wi491jffxGtF1n8Ts2rxQwa"; 
         } else if (membershipType == MembershipType.Rare) {
-            return "ipfs://rare-token-uri"; // Replace with actual URI
+            return "QmPPqpqP6dhgAdMjMdMfoNeTKQnTKiqV5QMu6sFLahpFb6"; 
         } else if (membershipType == MembershipType.Uncommon) {
-            return "ipfs://uncommon-token-uri"; // Replace with actual URI
+            return "QmPPqpqP6dhgAdMjMdMfoNeTKQnTKiqV5QMu6sFLahpFb6"; 
         }
-        return ""; // Default case
+        return ""; 
+    }
+
+    
+    function setTokenURIForMembership(uint256 tokenId, MembershipType membershipType) private {
+        string memory tokenURI;
+        
+        if (membershipType == MembershipType.Common) {
+            tokenURI = "QmXnxwJT4rwP4f9ubKjLwx6Wi491jffxGtF1n8Ts2rxQwa"; 
+        } else if (membershipType == MembershipType.Rare) {
+            tokenURI = "QmPPqpqP6dhgAdMjMdMfoNeTKQnTKiqV5QMu6sFLahpFb6"; 
+        } else if (membershipType == MembershipType.Uncommon) {
+            tokenURI = "QmXnxwJT4rwP4f9ubKjLwx6Wi491jffxGtF1n8Ts2rxQwa"; 
+        } else {
+            tokenURI = "";
+        }
+
+        _setTokenURI(tokenId, tokenURI);
     }
 }
