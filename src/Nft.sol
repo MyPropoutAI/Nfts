@@ -203,4 +203,23 @@ contract PropNFT is ERC721URIStorage, Ownable {
 
         _setTokenURI(tokenId, tokenURI);
     }
+
+    function getNFTsByOwner(address owner) public view returns (uint256[] memory) {
+        uint256 totalNFTs = _tokenIdCounter; // Total number of NFTs minted
+        uint256[] memory ownedNFTs = new uint256[](totalNFTs);
+        uint256 count = 0;
+
+        for (uint256 i = 0; i < totalNFTs; i++) {
+            if (ownerOf(i) == owner) { 
+                ownedNFTs[count] = i;
+                count++;
+            }
+        }
+        uint256[] memory result = new uint256[](count);
+        for (uint256 j = 0; j < count; j++) {
+            result[j] = ownedNFTs[j];
+        }
+
+        return result;
+    }
 }
